@@ -1,6 +1,0 @@
-<h1 class="text-3xl font-bold underline">
-  Hello <%= current_user&.username %>
-  <% Array.wrap(Targetable.target_types).each do |t| %>
-    <h1><%= t.to_s %></h1>
-  <% end %>
-</h1>
