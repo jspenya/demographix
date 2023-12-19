@@ -1,7 +1,62 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+# Create Users
+5.times do
+  User.create!(
+    username: Faker::Internet.username,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    birth_date:,
+    gender: sample_genders
+  )
+end
+
+# Create Offers
+5.times do
+  criteria = {}
+  Targetable.target_types.each do |klass|
+    characteristics = klass.new.characteristics
+    characs_indices = characteristics.map.with_index(1) { |element, index| index }
+
+    cs = characteristics.sample(characs_indices.sample).each do |characteristic|
+      criteria[characteristic] = if characteristic.inquiry.age?
+        sample_age_from_users
+      elsif characteristic.inquiry.gender?
+        sample_genders
+      end
+    end
+
+    Offer.create!(
+      title: Faker::Company.bs,
+      target_type: klass.to_s,
+      criteria: criteria
+    )
+  end
+end
+
+# Methods
+def genders
+  User::GENDERS
+end
+
+def gender_indices
+  genders.map.with_index(1) { |element, index| index }
+end
+
+def sample_genders
+  genders.sample(gender_indices.sample)
+end
+
+def age_from_users
+  User.all.select("birth_date").map(&:birth_date).map(&method(:to_age))
+end
+
+def age_from_users_indices
+  age_from_users.map.with_index(1) { |element, index| index }
+end
+
+def sample_age_from_users
+  age_from_users.sample(age_from_users_indices.sample)
+end
+
+def to_age(birth_date)
+  ((Time.zone.now - birth_date.to_time) / 1.year.seconds).floor
+end

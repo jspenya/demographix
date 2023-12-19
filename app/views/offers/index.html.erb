@@ -1,0 +1,7 @@
+<% @offers.each do |offer| %>
+  <div class="mb-3">
+    <h2><b><%= offer.title %></b></h2>
+
+    <%= offer.criteria.keys.join(", ") %>
+  </div>
+<% end %>
