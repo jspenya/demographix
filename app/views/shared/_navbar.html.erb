@@ -3,10 +3,12 @@
     <div></div>
     <div class="flex">
       <% if user_signed_in? %>
-        <%= button_to 'Log out', destroy_user_session_path, class: 'bg-gray-800 text-white px-4 py-2 rounded-md', method: :delete %>
+        <%= button_to t(".sign_out"), destroy_user_session_path, method: :delete, class: "btn btn-light-red" %>
       <% else %>
-        <%= button_to 'Log in', new_user_session_path, class: 'bg-gray-800 text-white px-4 py-2 rounded-md', method: :get%>
-        <%= button_to 'Sign up', new_user_registration_path, class: 'bg-gray-300 text-gray-800 px-4 py-2 ml-3 rounded-md', method: :get %>
+        <div class="flex gap-2">
+          <%= link_to t(".log_in"), new_user_session_path, class: 'btn btn-gray' %>
+          <%= link_to t(".sign_up"), new_user_registration_path, class: 'btn btn-primary' %>
+        </div>
       <% end %>
     </div>
   </div>

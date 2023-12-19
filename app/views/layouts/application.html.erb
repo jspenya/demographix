@@ -13,7 +13,7 @@
   <body>
     <header>
       <%= render partial: "shared/flash" %>
-      <%= render partial: "shared/navbar" unless controller_name.inquiry.sessions? %>
+      <%= render partial: "shared/navbar" unless controller_name.inquiry.in?(%w[sessions registrations]) %>
     </header>
 
     <main class="container mx-auto text-center mt-5 px-5">
