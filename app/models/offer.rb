@@ -1,3 +1,3 @@
 class Offer < ApplicationRecord
-  validates :title, presence: true
+  validates :title, :target_type, presence: true
 end

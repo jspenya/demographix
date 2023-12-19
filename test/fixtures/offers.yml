@@ -2,6 +2,15 @@
 
 one:
   title: <%= Faker::Company.bs %>
+  target_type: 'User'
+  criteria: {}
 
-two:
+offers_for_male_25_y_o:
   title: <%= Faker::Company.bs %>
+  target_type: 'User'
+  criteria: { "age": [25], "gender": ['Male'] }
+
+offers_for_female_46_y_o:
+  title: <%= Faker::Company.bs %>
+  target_type: 'User'
+  criteria: { "age": [46], "gender": ['Female'] }

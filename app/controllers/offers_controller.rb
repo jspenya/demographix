@@ -4,6 +4,6 @@ class OffersController < ApplicationController
   include Offerable
 
   def index
-    @offers = Offer.all
+    @offers = selected_offers
   end
 end

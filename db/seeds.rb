@@ -1,5 +1,5 @@
 # Create Users
-5.times do
+20.times do
   User.create!(
     username: Faker::Internet.username,
     first_name: Faker::Name.first_name,
@@ -10,7 +10,7 @@
 end
 
 # Create Offers
-5.times do
+20.times do
   criteria = {}
   Targetable.target_types.each do |klass|
     characteristics = klass.new.characteristics
@@ -33,6 +33,10 @@ end
 end
 
 # Methods
+def birth_date
+  Faker::Date.birthday(min_age: 18, max_age: 65)
+end
+
 def genders
   User::GENDERS
 end
