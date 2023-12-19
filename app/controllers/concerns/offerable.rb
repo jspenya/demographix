@@ -1,7 +1,3 @@
-# Implement a scoring system for offers that are targeted to the current user
-# The scoring system is based on the criteria of an offer
-## The more criteria that match with the current user's targetable attributes,
-## the higher the score
 module Offerable
   extend ActiveSupport::Concern
 
@@ -9,23 +5,36 @@ module Offerable
   #
   # @return [Array<Offer>] The selected offers.
   def selected_offers
-    Offer.select { |offer|
-      @weight_sum = (offer.criteria || {}).map(&weight).sum
-
-      offer.target_type.inquiry.User? && @weight_sum > 0
-    }.sort_by{ |offer| @weight_sum }.reverse
+    offers_with_weights.select { |offer, weight| weight > 0 }
+                       .sort_by { |_, weight| weight }
+                       .reverse.map(&:first)
   end
 
   private
 
-  # Returns a proc that calculates the weight of a given key-value pair.
+  # Returns an array of offers with their corresponding weights.
   #
-  # @return [Proc] The weight calculation proc.
-  def weight
-    proc do |key, value|
-      (Array.wrap(key.split.inject(current_user) { |instance, field|
-        instance.try(field)
-      }) & value).count
-    end
+  # @return [Array<[Offer, Integer]>] The offers with weights.
+  def offers_with_weights
+    Offer.select { |offer| offer.target_type.inquiry.User? }
+         .map { |offer| [offer, calculate_weight(offer.criteria)] }
+  end
+
+  # Calculates the weight of a given offer's criteria.
+  #
+  # @param [Hash] criteria The criteria of the offer.
+  # @return [Integer] The calculated weight.
+  def calculate_weight(criteria)
+    (criteria || {}).sum(&method(:weight_for_key_value_pair))
+  end
+
+  # Returns the weight of a given key-value pair in the criteria.
+  #
+  # @param [Array] pair The key-value pair.
+  # @return [Integer] The weight of the pair.
+  def weight_for_key_value_pair(pair)
+    key, value = pair
+    user_value = Array.wrap(key.split.inject(current_user) { |instance, field| instance.try(field) })
+    (user_value & value).count
   end
 end
