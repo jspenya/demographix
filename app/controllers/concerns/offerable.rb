@@ -5,6 +5,9 @@
 module Offerable
   extend ActiveSupport::Concern
 
+  # Returns an array of selected offers based on criteria and target type.
+  #
+  # @return [Array<Offer>] The selected offers.
   def selected_offers
     Offer.select { |offer|
       @weight_sum = (offer.criteria || {}).map(&weight).sum
@@ -15,6 +18,9 @@ module Offerable
 
   private
 
+  # Returns a proc that calculates the weight of a given key-value pair.
+  #
+  # @return [Proc] The weight calculation proc.
   def weight
     proc do |key, value|
       (Array.wrap(key.split.inject(current_user) { |instance, field|
