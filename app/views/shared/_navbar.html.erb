@@ -1,0 +1,13 @@
+<nav class="p-2">
+  <div class="container mx-auto flex justify-between items-center">
+    <div></div>
+    <div class="flex">
+      <% if user_signed_in? %>
+        <%= button_to 'Log out', destroy_user_session_path, class: 'bg-gray-800 text-white px-4 py-2 rounded-md', method: :delete %>
+      <% else %>
+        <%= button_to 'Log in', new_user_session_path, class: 'bg-gray-800 text-white px-4 py-2 rounded-md', method: :get%>
+        <%= button_to 'Sign up', new_user_registration_path, class: 'bg-gray-300 text-gray-800 px-4 py-2 ml-3 rounded-md', method: :get %>
+      <% end %>
+    </div>
+  </div>
+</nav>
