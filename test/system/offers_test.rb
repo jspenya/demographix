@@ -17,7 +17,7 @@ class OffersTest < ApplicationSystemTestCase
     visit offers_path
 
     assert_selector "h1", text: "Offers for you"
-    assert_no_text @offers_for_female_46_y_o
+    assert_no_text @offers_for_female_46_y_o.title
   end
 
   test "displays only a list of offers that are targeted for a 46 year old female user" do
@@ -26,6 +26,6 @@ class OffersTest < ApplicationSystemTestCase
     visit offers_path
 
     assert_selector "h1", text: "Offers for you"
-    assert_no_text @offers_for_male_25_y_o
+    assert_no_text @offers_for_male_25_y_o.title
   end
 end
