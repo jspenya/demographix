@@ -1,37 +1,3 @@
-# Create Users
-20.times do
-  User.create!(
-    username: Faker::Internet.username,
-    first_name: Faker::Name.first_name,
-    last_name: Faker::Name.last_name,
-    birth_date:,
-    gender: sample_genders
-  )
-end
-
-# Create Offers
-20.times do
-  criteria = {}
-  Targetable.target_types.each do |klass|
-    characteristics = klass.new.characteristics
-    characs_indices = characteristics.map.with_index(1) { |element, index| index }
-
-    cs = characteristics.sample(characs_indices.sample).each do |characteristic|
-      criteria[characteristic] = if characteristic.inquiry.age?
-        sample_age_from_users
-      elsif characteristic.inquiry.gender?
-        sample_genders
-      end
-    end
-
-    Offer.create!(
-      title: Faker::Company.bs,
-      target_type: klass.to_s,
-      criteria: criteria
-    )
-  end
-end
-
 # Methods
 def birth_date
   Faker::Date.birthday(min_age: 18, max_age: 65)
@@ -64,3 +30,44 @@ end
 def to_age(birth_date)
   ((Time.zone.now - birth_date.to_time) / 1.year.seconds).floor
 end
+
+puts "Creating Users and Offers..."
+
+# Create Users
+20.times do
+  User.create!(
+    email: Faker::Internet.email,
+    username: Faker::Internet.username,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    birth_date:,
+    gender: sample_genders,
+    password: 'password',
+    password_confirmation: 'password'
+  )
+end
+
+# Create Offers
+20.times do
+  criteria = {}
+  Targetable.target_types.each do |klass|
+    characteristics = klass.new.characteristics
+    characs_indices = characteristics.map.with_index(1) { |element, index| index }
+
+    cs = characteristics.sample(characs_indices.sample).each do |characteristic|
+      criteria[characteristic] = if characteristic.inquiry.age?
+        sample_age_from_users
+      elsif characteristic.inquiry.gender?
+        sample_genders
+      end
+    end
+
+    Offer.create!(
+      title: Faker::Company.bs,
+      target_type: klass.to_s,
+      criteria: criteria
+    )
+  end
+end
+
+puts "Done!"
